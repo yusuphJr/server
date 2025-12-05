@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Jr's FTP Server</title>
+  <title>Educational Resource Server</title>
   <style>
     body {
       background: linear-gradient(135deg, #0d0d0d, #1a1a2e, #16213e);
@@ -113,10 +113,11 @@
     </div>
 
     <p id="errorMsg" class="error">
-      ERROR 503: Server Offline.<br>
-      The requested resource cannot be accessed because the hosting server is currently offline.<br><br>
-      ✔ Turn on the server to restore access.<br>
-      ✔ Or contact your system administrator.
+      The computer you are using to request this file is currently **offline**.<br>
+Please try again later.<br><br>
+Authorized devices:<br>
+• Spectre AE030<br>
+• ProBook 450 G3
     </p>
   </div>
 
@@ -134,7 +135,9 @@
       }, 4500);
     };
     function showError() {
-      document.getElementById("errorMsg").style.display = "block";
+      const err = document.getElementById("errorMsg");
+      err.style.display = "block";
+      err.scrollIntoView({ behavior: 'smooth' });
     }
       function openHolidayMenu() {
       document.getElementById('holidayMenu').style.display = 'block';
