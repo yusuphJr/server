@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jr's FTP Server</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #0d0d0d, #1a1a2e, #16213e);
+      color: #e0f7fa;
+      font-family: "Poppins", sans-serif;
+      padding: 20px;
+      animation: fadeIn 1.2s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .terminal {
+      border: 2px solid #00e5ff;
+      padding: 25px;
+      border-radius: 15px;
+      background: rgba(0, 0, 0, 0.65);
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+      backdrop-filter: blur(6px);
+      animation: popIn 0.6s ease;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    h2, h3, h4 {
+      color: #00e5ff;
+      text-shadow: 0 0 8px #00e5ff;
+    }
+
+    a, button {
+      color: #000;
+      background: #00e5ff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      margin: 5px;
+    }
+
+    button:hover, a:hover {
+      background: #00b8d4;
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0, 229, 255, 0.4);
+    }
+
+    .error {
+      color: #ff8a80;
+      margin-top: 15px;
+      display: none;
+    }
+
+    ul li {
+      margin: 8px 0;
+    }
+</style>
+</head>
+<body>
+  <div id="bootScreen" class="terminal" style="display:block; text-align:center;">
+    <h2>Booting Server...</h2>
+    <p id="bootText">Initializing...</p>
+  </div>
+  <div id="loginScreen" class="terminal" style="display:block;">
+    <h2>Secure Access Portal</h2>
+    <p>Enter administrator credentials to access the server.</p>
+    <form onsubmit="return login(event)">
+      <label>Username:<br><input type="text" id="user" /></label><br><br>
+      <label>Password:<br><input type="password" id="pass" /></label><br><br>
+      <button type="submit">Login</button>
+    </form>
+    <p id="loginError" class="error" style="display:none;">Login only valid if authorized from the following devices:<br>• Spectre AE030<br>• ProBook 450 G3</p>
+  </div>
+
+  <div id="serverScreen" class="terminal" style="display:none;">
+    <h2>📚 TIE Educational Resources Server</h2>
+    <p>Connected to server: <strong>10.22.4.16</strong></p>
+    <p>Status: <span style="color:#00ff95;">ONLINE</span></p>
+
+    <h3>Available Books (Form 3 & Form 4)</h3>
+    <ul>
+      <li><a href="#" onclick="showError()">Biology F3</a></li>
+      <li><a href="#" onclick="showError()">Biology F4</a></li>
+      <li><a href="#" onclick="showError()">Physics F3</a></li>
+      <li><a href="#" onclick="showError()">Physics F4</a></li>
+      <li><a href="#" onclick="showError()">Chemistry F3</a></li>
+      <li><a href="#" onclick="showError()">Chemistry F4</a></li>
+      <li><a href="#" onclick="showError()">Mathematics F3</a></li>
+      <li><a href="#" onclick="showError()">Mathematics F4</a></li>
+    </ul>
+
+    <h3>Holiday Packages</h3>
+    <button onclick="openHolidayMenu()">Open Holiday Packages</button>
+
+    <div id="holidayMenu" style="display:none; margin-top:15px;">
+      <h4>Select Year</h4>
+      <button onclick="chooseYear(2024)">2024</button>
+      <button onclick="chooseYear(2025)">2025</button>
+
+      <div id="holidayStep2" style="display:none; margin-top:15px;"></div>
+      <div id="holidayStep3" style="display:none; margin-top:15px;"></div>
+    </div>
+
+    <p id="errorMsg" class="error">
+      ERROR 503: Server Offline.<br>
+      The requested resource cannot be accessed because the hosting server is currently offline.<br><br>
+      ✔ Turn on the server to restore access.<br>
+      ✔ Or contact your system administrator.
+    </p>
+  </div>
+
+  <script>
+    // Boot Screen Sequence
+    window.onload = function() {
+      const bootText = document.getElementById('bootText');
+      setTimeout(() => bootText.innerText = 'Loading system modules...', 800);
+      setTimeout(() => bootText.innerText = 'Checking network status...', 1600);
+      setTimeout(() => bootText.innerText = 'Decrypting credentials...', 2400);
+      setTimeout(() => bootText.innerText = 'Welcome Yusuph', 3200);
+      setTimeout(() => {
+        document.getElementById('bootScreen').style.display = 'none';
+        document.getElementById('loginScreen').style.display = 'block';
+      }, 4500);
+    };
+    function showError() {
+      document.getElementById("errorMsg").style.display = "block";
+    }
+      function openHolidayMenu() {
+      document.getElementById('holidayMenu').style.display = 'block';
+    }
+
+    function chooseYear(year) {
+      const step2 = document.getElementById('holidayStep2');
+      const step3 = document.getElementById('holidayStep3');
+      step3.style.display = 'none';
+
+      let holidays = [];
+      if (year === 2025) holidays = ['April', 'June', 'December'];
+      if (year === 2024) holidays = ['June', 'December'];
+
+      step2.innerHTML = `<h4>Holidays for ${year}</h4>` +
+        holidays.map(h => `<button onclick=\"chooseHoliday('${year}','${h}')\">${h}</button>`).join(' ');
+      step2.style.display = 'block';
+    }
+
+    function chooseHoliday(year, holiday) {
+      const step3 = document.getElementById('holidayStep3');
+
+      let subject = '';
+      if (year == 2024) subject = 'Form 2 – Science';
+      if (year == 2025) subject = 'Form 3 – Science';
+
+      step3.innerHTML = `<h4>${holiday} Package – ${subject}</h4><p>Download not available: Server Offline.</p>`;
+      step3.style.display = 'block';
+    }
+
+    function login(event) {
+      event.preventDefault();
+      const u = document.getElementById("user").value;
+      const p = document.getElementById("pass").value;
+
+      // These will be injected from Render environment variables
+      const envUser = window.ENV_USERNAME;
+      const envPass = window.ENV_PASSWORD;
+
+      // Always reject login with device authorization message
+      if (false) {
+        // never true – fully block login
+      } else {
+        document.getElementById("loginError").style.display = "block";
+      }
+    }
+
+    // Render-specific: environment variables injected dynamically
+    window.ENV_USERNAME = "$ENV_USERNAME";
+    window.ENV_PASSWORD = "$ENV_PASSWORD";
+  </script>
+</body>
+</html>
